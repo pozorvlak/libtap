@@ -41,6 +41,6 @@ void _gen_result(int, const char *, char *, unsigned int, char *, ...);
 
 int plan_no_plan(void);
 int plan_skip_all(char *);
-int plan_tests(int);
+int plan_tests(unsigned int);
 
 void diag(char *, ...);

@@ -33,11 +33,11 @@
 static int no_plan = 0;
 static int skip_all = 0;
 static int have_plan = 0;
-static int test_count = 0;	/* Number of tests that have been run */
-static int e_tests = 0;		/* Expected number of tests to run */
+static unsigned int test_count = 0; /* Number of tests that have been run */
+static unsigned int e_tests = 0; /* Expected number of tests to run */
 static unsigned int failures = 0; /* Number of tests that failed */
 
-static void _expected_tests(int);
+static void _expected_tests(unsigned int);
 static void _tap_init(void);
 static void _cleanup(void);
 
@@ -146,7 +146,7 @@ plan_skip_all(char *reason)
  * Note the number of tests that will be run.
  */
 int
-plan_tests(int tests)
+plan_tests(unsigned int tests)
 {
 
 	if(have_plan != 0) {
@@ -178,7 +178,7 @@ diag(char *fmt, ...)
 }
 
 void
-_expected_tests(int tests)
+_expected_tests(unsigned int tests)
 {
 	printf("1..%d\n", tests);
 	e_tests = tests;
