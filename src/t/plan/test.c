@@ -25,31 +25,15 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>
 
 #include "tap.h"
-
-/* Run pre-defined tests on the test library to make sure that the basic
-   functionality works, and it can be used to test itself afterwards */
 
 int
 main(int argc, char *argv[])
 {
-#if 0
-	if(argc == 1 || argc > 3) {
-		fprintf(stderr, "usage: plan <cmd> <arg>\n");
-		return 1;
-	}
 
+	plan_tests(1);
+	ok(1, NULL);
 
-	if(argc <= 2) {
-		plan(argv[1]);
-		return 0;
-	}
-
-	if(argc == 3) {
-		plan(argv[1], atoi(argv[2]));
-		return 0;
-	}
-#endif
+	return 0;
 }

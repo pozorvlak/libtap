@@ -24,19 +24,13 @@
  * SUCH DAMAGE.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "tap.h"
-
-/* Run pre-defined tests on the test library to make sure that the basic
-   functionality works, and it can be used to test itself afterwards */
 
 int
 main(int argc, char *argv[])
 {
 
-//	plan_tests(2);
-	ok(1 == 1, "1 equals 1");
-	ok(2 == 1, "2 equals 1");
+	plan_skip_all("No good reason");
+
+	return 0;
 }

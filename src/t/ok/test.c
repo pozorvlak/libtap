@@ -25,15 +25,18 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>
 
 #include "tap.h"
-
-/* Run pre-defined tests on the test library to make sure that the basic
-   functionality works, and it can be used to test itself afterwards */
 
 int
 main(int argc, char *argv[])
 {
-	plan_skip_all("No good reason");
+
+	plan_tests(4);
+	ok(1 == 1, "1 equals 1");
+	ok2(1 == 1);
+	ok(1 == 2, "1 equals 2");
+	ok2(1 == 2);
+
+	return 0;
 }
