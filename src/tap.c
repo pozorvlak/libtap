@@ -185,6 +185,26 @@ _expected_tests(unsigned int tests)
 	e_tests = tests;
 }
 
+void
+skip(unsigned int n, char *fmt, ...)
+{
+	va_list ap;
+	char *skip_msg;
+	
+	va_start(ap, fmt);
+	asprintf(&skip_msg, fmt, ap);
+	va_end(ap);
+
+	while(n-- > 0) {
+		test_count++;
+		printf("ok %d # skip %s\n", test_count, 
+		       skip_msg != NULL ? 
+		       skip_msg : "libtap():malloc() failed");
+	}
+
+	free(skip_msg);
+}
+
 int
 exit_status(void)
 {

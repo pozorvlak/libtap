@@ -26,7 +26,43 @@ self-documenting that you don't need to provide a test name.
 E.g.,
 
     ok(1 == 1, "1 equals one"); /* PRINT: ok 1 - 1 equals 1 */
-    ok2(1 == 2);                /* PRINT: ok 2 - 1 == 1 */
+    ok2(1 == 2);                /* PRINT: not ok 2 - 1 == 2 */
+
+Sets of tests can be skipped.  Ordinarily you would do this because
+the test can't be run in this particular testing environment.
+
+For example, suppose some tests should be run as root.  If the test is
+not being run as root then the tests should be skipped.  In this 
+implementation, skipped tests are flagged as being ok, with a special
+message indicating that they were skipped.
+
+    skip(n, msg, ...);
+
+will produce output for 'n' lines of skipped tests.  The output message
+is 'msg', and is printf()like.  It is your responsibility to ensure that
+'n' is correct for the number of tests to skip.
+
+This is normally implemented with a "do { ... } while(0);" loop, with a 
+"continue;" immediately after the skip() call.  This ensures that there
+are no additional side effects from the skipped tests.
+
+    do {
+        if(getuid() != 0) {
+            skip(1, "Test only makes sense as root");
+            continue;
+        }
+
+        ok(do_something_as_root() == 0, "do_something_as_root() worked");
+    } while(0);
+
+Two macros, SKIP_START and SKIP_END can handle some of this for you.  The
+above example could be re-written:
+
+    SKIP_START(getuid() != 0, 1, "Test only makes sense as root");
+
+    ok(do_something_as_root() == 0, "do_something_as_root() worked");
+
+    SKIP_END;
 
 You also have diag(), which takes a printf() style format string and related
 arguments, and sends the output to stderr as a test comment.  diag() adds

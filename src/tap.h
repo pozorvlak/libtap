@@ -35,6 +35,15 @@
 		_gen_result(1, __func__, __FILE__, __LINE__, "%s", #e) : \
 		_gen_result(0, __func__, __FILE__, __LINE__, "%s", #e))
 
+#define SKIP_START(test, n, fmt, ...)			\
+	do {						\
+		if((test)) {				\
+			skip(n, fmt, ## __VA_ARGS__);	\
+			continue;			\
+		}
+
+#define SKIP_END } while(0);
+
 void _reset(void);		/* Exposed for testing */
 
 void _gen_result(int, const char *, char *, unsigned int, char *, ...);
@@ -44,5 +53,7 @@ int plan_skip_all(char *);
 int plan_tests(unsigned int);
 
 void diag(char *, ...);
+
+void skip(unsigned int, char *, ...);
 
 int exit_status(void);
