@@ -3,5 +3,6 @@ libtap_la_SOURCES = tap.c tap.h
 libtap_la_LDFLAGS = -lpthread
 
 man_MANS = tap.3
+EXTRA_DIST = $(man_MANS)
 
 include_HEADERS = tap.h
