@@ -6,9 +6,19 @@ Usage:
 
 Start by calling one of the plan_* functions:
 
-    plan_no_plan()   /* you have no test plan, or */
-    plan_skip_all()  /* all tests will be skipped, or */
-    plan_tests(42);  /* you will run 42 tests */
+    plan_no_plan()                        /* you have no test plan, or */
+    plan_skip_all("Skipping because...")  /* all tests will be skipped, or */
+    plan_tests(42);                       /* you will run 42 tests */
+
+plan_no_plan() indicates that you don't know how many tests you're going
+to run.  This is possible, but a bad idea.
+
+plan_skip_all(msg) indicates that you are going to skip all the tests in
+this file.  'msg' should indicate the reason for skipping (e.g., a database
+connection could not be made).
+
+plan_tests(n) indicates that you are going to run 'n' tests.  Running any
+fewer or any more is treated as a failure.
 
 Then you have one of ok() or ok2() at your disposal.  ok()'s first parameter
 is the code to test.  The second parameter is the test name.  This is a 
