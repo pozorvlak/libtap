@@ -81,17 +81,6 @@ _gen_result(int ok, const char *func, char *file, unsigned int line,
 	return ok ? 1 : 0;
 }
 
-void
-_reset(void)
-{
-	no_plan = 0;
-	skip_all = 0;
-	have_plan = 0;
-	test_count = 0;
-	e_tests = 0;
-	failures = 0;
-}
-
 /*
  * Initialise the TAP library.  Will only do so once, however many times it's
  * called.

@@ -47,8 +47,6 @@
 
 #define SKIP_END } while(0);
 
-void _reset(void);		/* Exposed for testing */
-
 unsigned int _gen_result(int, const char *, char *, unsigned int, char *, ...);
 
 int plan_no_plan(void);
