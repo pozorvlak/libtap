@@ -25,7 +25,6 @@
  */
 
 #include <ctype.h>
-#include <pthread.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -42,12 +41,18 @@ static char *todo_msg = NULL;
 static char *todo_msg_fixed = "libtap malloc issue";
 static int todo = 0;
 static int test_died = 0;
-static pthread_mutex_t M = PTHREAD_MUTEX_INITIALIZER;
 
-/* Partly to save typing, partly because I expect the global variables
-   might move in to a global struct at some point */
-#define LOCK pthread_mutex_lock(&M);
-#define UNLOCK pthread_mutex_unlock(&M);
+/* Encapsulate the pthread code in a conditional.  In the absence of
+   libpthread the code does nothing */
+#ifdef HAVE_LIBPTHREAD
+#include <pthread.h>
+static pthread_mutex_t M = PTHREAD_MUTEX_INITIALIZER;
+# define LOCK pthread_mutex_lock(&M);
+# define UNLOCK pthread_mutex_unlock(&M);
+#else
+# define LOCK
+# define UNLOCK
+#endif
 
 static void _expected_tests(unsigned int);
 static void _tap_init(void);

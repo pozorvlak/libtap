@@ -9,6 +9,7 @@ AC_PROG_INSTALL
 case "$host" in
 	*-*-*freebsd4*)
 		LDFLAGS="$LDFLAGS -pthread"
+		HAVE_LIBPTHREAD=1
 		;;
 	*)
 		AC_CHECK_LIB(pthread, main)
