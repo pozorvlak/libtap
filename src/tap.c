@@ -270,7 +270,7 @@ todo_start(char *fmt, ...)
 	va_list ap;
 
 	va_start(ap, fmt);
-	asprintf(&todo_msg, fmt, ap);
+	vasprintf(&todo_msg, fmt, ap);
 	va_end(ap);
 
 	todo = 1;

@@ -7,7 +7,7 @@ use Test::More;
 
 my $rc = 0;
 
-$rc = plan tests => 4;
+$rc = plan tests => 5;
 diag("Returned: " . sprintf("%d", $rc));
 
 my $side_effect = 0;		# Check whether TODO has side effects
@@ -27,6 +27,13 @@ TODO: {
 
 	# This test should unexpectedly succeed
 	$rc = ok($side_effect == 1, 'side_effect checked out');
+	diag("Returned: $rc");
+}
+
+TODO: {
+	local $TODO = 'Testing printf() expansion in todo_start()';
+
+	$rc = ok(0, 'dummy test');
 	diag("Returned: $rc");
 }
 

@@ -34,7 +34,7 @@ main(int argc, char *argv[])
 	unsigned int rc = 0;
 	unsigned int side_effect = 0;
 
-	rc = plan_tests(4);
+	rc = plan_tests(5);
 	diag("Returned: %d", rc);
 
 	rc = ok(1 == 1, "1 equals 1");	/* Should always work */
@@ -50,6 +50,13 @@ main(int argc, char *argv[])
 
 	/* This test should unexpectedly succeed */
 	rc = ok(side_effect == 1, "side_effect checked out");
+	diag("Returned: %d", rc);
+
+	todo_end();
+
+	todo_start("Testing printf() %s in todo_start()", "expansion");
+
+	rc = ok(0, "dummy test");
 	diag("Returned: %d", rc);
 
 	todo_end();
