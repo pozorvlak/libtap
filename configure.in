@@ -21,23 +21,23 @@ AC_CHECK_FUNCS([atexit])
 
 AC_CONFIG_FILES([Makefile
 		 src/Makefile
-		 src/t/Makefile
-		 src/t/diag/Makefile
-		 src/t/fail/Makefile
-		 src/t/ok/Makefile
-		 src/t/ok/ok-hash/Makefile
-		 src/t/ok/ok-numeric/Makefile
-		 src/t/ok/ok/Makefile
-		 src/t/pass/Makefile
-		 src/t/plan/Makefile
-		 src/t/plan/no-tests/Makefile
-		 src/t/plan/no_plan/Makefile
-		 src/t/plan/not-enough-tests/Makefile
-		 src/t/plan/sane/Makefile
-		 src/t/plan/skip_all/Makefile
-		 src/t/plan/too-many-plans/Makefile
-		 src/t/plan/too-many-tests/Makefile
-		 src/t/skip/Makefile
-		 src/t/todo/Makefile
+		 tests/Makefile
+		 tests/diag/Makefile
+		 tests/fail/Makefile
+		 tests/ok/Makefile
+		 tests/ok/ok-hash/Makefile
+		 tests/ok/ok-numeric/Makefile
+		 tests/ok/ok/Makefile
+		 tests/pass/Makefile
+		 tests/plan/Makefile
+		 tests/plan/no-tests/Makefile
+		 tests/plan/no_plan/Makefile
+		 tests/plan/not-enough-tests/Makefile
+		 tests/plan/sane/Makefile
+		 tests/plan/skip_all/Makefile
+		 tests/plan/too-many-plans/Makefile
+		 tests/plan/too-many-tests/Makefile
+		 tests/skip/Makefile
+		 tests/todo/Makefile
 		])
 AC_OUTPUT
