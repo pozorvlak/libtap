@@ -1,7 +1,7 @@
 Most of the tests follow the same pattern.
 
- * test.pl that uses Test::More, and uses Test::More to demonstrate
-   whatever functionality that we're trying to test.
+ * test.pl that uses Test::More, and demonstrates whatever functionality 
+   that we're trying to test.  This is the reference code.
 
  * test.c, which tests the libtap reimplementation of the same functionality.
 
