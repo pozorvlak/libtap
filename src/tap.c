@@ -48,7 +48,8 @@ static void _cleanup(void);
  * test_comment -- a comment to print afterwards, may be NULL
  */
 void
-_gen_result(int ok, char *test_name, char *test_comment)
+_gen_result(int ok, char *test_name, char *test_comment, 
+	    const char *func, char *file, unsigned int line)
 {
 
 	test_count++;
@@ -67,6 +68,9 @@ _gen_result(int ok, char *test_name, char *test_comment)
 		printf(" # %s", test_comment);
 
 	printf("\n");
+
+	if(!ok)
+		diag("    Failed test (%s:%s() at line %d)", file, func, line);
 }
 
 void
@@ -153,10 +157,23 @@ plan_tests(int tests)
 }
 
 void
+diag(char *fmt, ...)
+{
+	va_list ap;
+
+	fputs("# ", stderr);
+
+	va_start(ap, fmt);
+	vfprintf(stderr, fmt, ap);
+	va_end(ap);
+
+	fputs("\n", stderr);
+}
+
+void
 _expected_tests(int tests)
 {
 	printf("1..%d\n", tests);
-	printf("# _expected_tests(%d)\n", tests);
 	e_tests = tests;
 }
 

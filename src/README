@@ -20,3 +20,9 @@ E.g.,
 
     ok(1 == 1, '1 equals one'); /* PRINT: ok 1 - 1 equals 1 */
     ok2(1 == 2);                /* PRINT: ok 2 - 1 == 1 */
+
+You also have diag(), which takes a printf() style format string and related
+arguments, and sends the output to stderr as a test comment.  diag() adds
+the necessary trailing "\n" for you.
+
+    diag("Expected return code 0, got return code %d", rcode);

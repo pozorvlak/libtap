@@ -24,14 +24,22 @@
  * SUCH DAMAGE.
  */
 
-#define ok(e, test) ((e) ? _gen_result(1, test, NULL) : _gen_result(0, test, NULL))
-#define ok2(e) ((e) ? _gen_result(1, #e, NULL) : _gen_result(0, #e, NULL))
+/* C99: __func__ */
+   
+#define ok(e, test) ((e) ? \
+		     _gen_result(1, test, NULL, __func__, __FILE__, __LINE__) : \
+		     _gen_result(0, test, NULL, __func__, __FILE__, __LINE__))
+
+#define ok2(e) ((e) ? \
+		_gen_result(1, #e, NULL, __func__, __FILE__, __LINE__) : \
+		_gen_result(0, #e, NULL, __func__, __FILE__, __LINE__))
 
 void _reset(void);		/* Exposed for testing */
 
-void _gen_result(int, char *, char *);
+void _gen_result(int, char *, char *, const char *, char *, unsigned int);
 
 int plan_no_plan(void);
 int plan_skip_all(char *);
 int plan_tests(int);
 
+void diag(char *, ...);
