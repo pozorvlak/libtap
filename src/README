@@ -38,6 +38,18 @@ E.g.,
     ok(1 == 1, "1 equals one"); /* PRINT: ok 1 - 1 equals 1 */
     ok1(1 == 2);                /* PRINT: not ok 2 - 1 == 2 */
 
+You also have pass(test_name, ...) and fail(test_name, ...).  test_name is a 
+printf()'like string. 
+
+From the Test::More documentation:
+
+    Sometimes you just want to say that the tests have passed.  Usually
+    the case is you've got some complicated condition that is difficult
+    to wedge into an ok().  In this case, you can simply use pass() (to
+    declare the test ok) or fail (for not ok).
+
+These are synonyms for ok(1, test_name, ...) and ok(0, test_name, ...).
+
 Sets of tests can be skipped.  Ordinarily you would do this because
 the test can't be run in this particular testing environment.
 

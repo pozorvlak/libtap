@@ -24,39 +24,16 @@
  * SUCH DAMAGE.
  */
 
-/* ## __VA_ARGS__ is a gcc'ism */   
-#define ok(e, test, ...) ((e) ?						\
-			  _gen_result(1, __func__, __FILE__, __LINE__,  \
-				      test, ## __VA_ARGS__) :		\
-			  _gen_result(0, __func__, __FILE__, __LINE__,  \
-				      test, ## __VA_ARGS__))
+#include <stdio.h>
 
-#define ok1(e) ((e) ? \
-		_gen_result(1, __func__, __FILE__, __LINE__, "%s", #e) : \
-		_gen_result(0, __func__, __FILE__, __LINE__, "%s", #e))
+#include "tap.h"
 
-#define pass(test, ...) ok(1, test, ## __VA_ARGS__);
-#define fail(test, ...) ok(0, test, ## __VA_ARGS__);
+int
+main(int argc, char *argv[])
+{
 
-#define SKIP_START(test, n, fmt, ...)			\
-	do {						\
-		if((test)) {				\
-			skip(n, fmt, ## __VA_ARGS__);	\
-			continue;			\
-		}
-
-#define SKIP_END } while(0);
-
-void _reset(void);		/* Exposed for testing */
-
-void _gen_result(int, const char *, char *, unsigned int, char *, ...);
-
-int plan_no_plan(void);
-int plan_skip_all(char *);
-int plan_tests(unsigned int);
-
-void diag(char *, ...);
-
-void skip(unsigned int, char *, ...);
-
-int exit_status(void);
+	plan_tests(2);
+	fail("test to fail");
+	fail("test to fail %s", "with extra string");
+	return exit_status();
+}

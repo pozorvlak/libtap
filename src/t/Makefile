@@ -1,4 +1,6 @@
+SUBDIR+=	fail
 SUBDIR+=	ok
+SUBDIR+=	pass
 SUBDIR+=	plan
 SUBDIR+=	skip
 
