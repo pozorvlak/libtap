@@ -32,5 +32,5 @@ main(int argc, char *argv[])
 
 	plan_skip_all("No good reason");
 
-	return 0;
+	return exit_status();
 }

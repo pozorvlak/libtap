@@ -35,5 +35,5 @@ main(int argc, char *argv[])
 	plan_tests(1);
 	ok(1, NULL);
 
-	return 0;
+	return exit_status();
 }

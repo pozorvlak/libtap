@@ -185,6 +185,12 @@ _expected_tests(unsigned int tests)
 	e_tests = tests;
 }
 
+int
+exit_status(void)
+{
+	return failures;
+}
+
 /*
  * Cleanup at the end of the run, produce any final output that might be
  * required.

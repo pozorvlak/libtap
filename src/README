@@ -10,15 +10,22 @@ Start by calling one of the plan_* functions:
     plan_skip_all()  /* all tests will be skipped, or */
     plan_tests(42);  /* you will run 42 tests */
 
-Then you have one of ok() or ok2() at your disposal.
+Then you have one of ok() or ok2() at your disposal.  ok()'s first parameter
+is the code to test.  The second parameter is the test name.  This is a 
+printf()like format string, and the third and subsequent parameters should
+fill out any values in the string.
 
-    ok(code to test, 'test name');
+    ok(a_func() == 0, "test name");
+    ok(some_func(i), "some_func(%d)", i);
+
+ok2() is for situations where the code to test is sufficiently 
+self-documenting that you don't need to provide a test name.
 
     ok2(code to test); /* test name is automatically the same as the code */
 
 E.g.,
 
-    ok(1 == 1, '1 equals one'); /* PRINT: ok 1 - 1 equals 1 */
+    ok(1 == 1, "1 equals one"); /* PRINT: ok 1 - 1 equals 1 */
     ok2(1 == 2);                /* PRINT: ok 2 - 1 == 1 */
 
 You also have diag(), which takes a printf() style format string and related
@@ -26,3 +33,12 @@ arguments, and sends the output to stderr as a test comment.  diag() adds
 the necessary trailing "\n" for you.
 
     diag("Expected return code 0, got return code %d", rcode);
+
+Finally, there's exit_status(), which returns an int suitable for use
+when return'ing from main(), or calling exit().  You should always do one
+of:
+
+    return exit_status();
+    exit(exit_status());
+
+As appropriate.  

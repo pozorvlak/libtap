@@ -44,3 +44,5 @@ int plan_skip_all(char *);
 int plan_tests(unsigned int);
 
 void diag(char *, ...);
+
+int exit_status(void);
