@@ -20,7 +20,7 @@ else
 	echo 'not ok 1 - output is identical'
 fi
 
-if [ $perl_status -eq $c_status ]; then
+if [ $perlstatus -eq $cstatus ]; then
 	echo 'ok 2 - status code'
 else
 	echo 'not ok 2 - status code'
