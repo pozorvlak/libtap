@@ -2,6 +2,8 @@
 TESTS = 		test.t
 TESTS_ENVIRONMENT =	$(SHELL)
 
+EXTRA_DIST = 		$(TESTS) test.pl
+
 check_PROGRAMS = 	test
 
 test_CFLAGS = 		-g -I../../../src

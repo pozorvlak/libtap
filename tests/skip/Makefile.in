@@ -163,6 +163,7 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 TESTS = test.t
 TESTS_ENVIRONMENT = $(SHELL)
+EXTRA_DIST = $(TESTS) test.pl
 test_CFLAGS = -g -I../../src
 test_LDFLAGS = -L../../src
 test_LDADD = -ltap
