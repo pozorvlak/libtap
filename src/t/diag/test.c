@@ -33,11 +33,14 @@ main(int argc, char *argv[])
 {
 	unsigned int rc = 0;
 
-	rc = plan_tests(1);
+	plan_tests(2);
+
+	rc = diag("A diagnostic message");
 	diag("Returned: %d", rc);
 
-	rc = ok(1, NULL);
-	diag("Returned: %d", rc);
+	/* Make sure the failure is passed through */
+	ok(1, "test 1") || diag("ok() failed, and shouldn't");
+	ok(0, "test 2") || diag("ok() passed, and shouldn't");
 
 	return exit_status();
 }

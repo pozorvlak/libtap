@@ -31,9 +31,13 @@
 int
 main(int argc, char *argv[])
 {
+	unsigned int rc = 0;
 
-	plan_tests(0);
-	ok(1, NULL);
+	rc = plan_tests(0);
+	diag("Returned: %d", rc);
+
+	rc = ok(1, NULL);
+	diag("Returned: %d", rc);
 
 	return exit_status();
 }

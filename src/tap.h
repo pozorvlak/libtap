@@ -49,14 +49,14 @@
 
 void _reset(void);		/* Exposed for testing */
 
-void _gen_result(int, const char *, char *, unsigned int, char *, ...);
+unsigned int _gen_result(int, const char *, char *, unsigned int, char *, ...);
 
 int plan_no_plan(void);
 int plan_skip_all(char *);
 int plan_tests(unsigned int);
 
-void diag(char *, ...);
+unsigned int diag(char *, ...);
 
-void skip(unsigned int, char *, ...);
+int skip(unsigned int, char *, ...);
 
 int exit_status(void);

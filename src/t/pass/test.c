@@ -31,9 +31,16 @@
 int
 main(int argc, char *argv[])
 {
+	unsigned int rc = 0;
 
-	plan_tests(2);
-	pass("test to pass");
-	pass("test to pass %s", "with extra string");
+	rc = plan_tests(2);
+	diag("Returned: %d", rc);
+
+	rc = pass("test to pass");
+	diag("Returned: %d", rc);
+
+	rc = pass("test to pass %s", "with extra string");
+	diag("Returned: %d", rc);
+
 	return exit_status();
 }

@@ -3,6 +3,12 @@
 use warnings;
 use strict;
 
-use Test::More qw(no_plan);
+my $rc = 0;
 
-ok(1);
+use Test::More;
+
+$rc = plan qw(no_plan);
+diag("Returned: " . sprintf("%d", $rc));
+
+$rc = ok(1);
+diag("Returned: $rc");

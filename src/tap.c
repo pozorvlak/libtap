@@ -48,7 +48,7 @@ static void _cleanup(void);
  * test_name -- the name of the test, may be NULL
  * test_comment -- a comment to print afterwards, may be NULL
  */
-void
+unsigned int
 _gen_result(int ok, const char *func, char *file, unsigned int line, 
 	    char *test_name, ...)
 {
@@ -75,6 +75,10 @@ _gen_result(int ok, const char *func, char *file, unsigned int line,
 	if(!ok)
 		diag("    Failed test (%s:%s() at line %d)", 
 		     file, func, line);
+
+	/* We only care (when testing) that ok is positive, but here we
+	   specifically only want to return 1 or 0 */
+	return ok ? 1 : 0;
 }
 
 void
@@ -167,11 +171,13 @@ plan_tests(unsigned int tests)
 	}
 
 	have_plan = 1;
-		
+
 	_expected_tests(tests);
+
+	return 0;
 }
 
-void
+unsigned int
 diag(char *fmt, ...)
 {
 	va_list ap;
@@ -183,6 +189,8 @@ diag(char *fmt, ...)
 	va_end(ap);
 
 	fputs("\n", stderr);
+
+	return 0;
 }
 
 void
@@ -192,7 +200,7 @@ _expected_tests(unsigned int tests)
 	e_tests = tests;
 }
 
-void
+int
 skip(unsigned int n, char *fmt, ...)
 {
 	va_list ap;
@@ -210,6 +218,8 @@ skip(unsigned int n, char *fmt, ...)
 	}
 
 	free(skip_msg);
+
+	return 1;
 }
 
 int

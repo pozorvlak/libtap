@@ -31,12 +31,22 @@
 int
 main(int argc, char *argv[])
 {
+	unsigned int rc = 0;
 
-	plan_tests(4);
-	ok(1 == 1, "1 equals 1");
-	ok1(1 == 1);
-	ok(1 == 2, "1 equals 2");
-	ok1(1 == 2);
+	rc = plan_tests(4);
+	diag("Returned: %d", rc);
+
+	rc = ok(1 == 1, "1 equals 1");
+	diag("Returned: %d", rc);
+
+	rc = ok1(1 == 1);
+	diag("Returned: %d", rc);
+
+	rc = ok(1 == 2, "1 equals 2");
+	diag("Returned: %d", rc);
+
+	rc = ok1(1 == 2);
+	diag("Returned: %d", rc);
 
 	return exit_status();
 }

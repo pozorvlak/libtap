@@ -31,15 +31,18 @@
 int
 main(int argc, char *argv[])
 {
-	int side_effect = 0;
+	unsigned int rc = 0;
+	unsigned int side_effect = 0;
 
-	plan_tests(4);
+	rc = plan_tests(4);
+	diag("Returned: %d", rc);
 
-	ok(1 == 1, "1 equals 1");	/* Should always work */
+	rc = ok(1 == 1, "1 equals 1");	/* Should always work */
+	diag("Returned: %d", rc);
 
 	do {
 		if(1) {
-			skip(1, "Testing skipping");
+			rc = skip(1, "Testing skipping");
 			continue;
 		}
 		
@@ -49,14 +52,18 @@ main(int argc, char *argv[])
 
 	} while(0);
 
+	diag("Returned: %d", rc);
+
 	SKIP_START(1 == 1, 1, "Testing skipping #2");
 
 	side_effect++;
-	ok(side_effect == 1, "side_effect checked out");
+	rc = ok(side_effect == 1, "side_effect checked out");
+	diag("Returned: %d", rc);
 
 	SKIP_END;
 
-	ok(side_effect == 0, "side_effect is %d", side_effect);
+	rc = ok(side_effect == 0, "side_effect is %d", side_effect);
+	diag("Returned: %d", rc);
 
 	return exit_status();
 }

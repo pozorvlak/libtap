@@ -1,3 +1,4 @@
+SUBDIR+=	diag
 SUBDIR+=	fail
 SUBDIR+=	ok
 SUBDIR+=	pass

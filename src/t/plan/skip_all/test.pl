@@ -5,4 +5,7 @@ use strict;
 
 use Test::More;
 
-plan skip_all => "No good reason";
+my $rc = 0;
+
+$rc = plan skip_all => "No good reason";
+diag("Returned: " . sprintf("%d", $rc));

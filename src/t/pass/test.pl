@@ -5,7 +5,13 @@ use strict;
 
 use Test::More;
 
-plan tests => 2;
+my $rc = 0;
 
-pass('test to pass');
-pass('test to pass with extra string');
+$rc = plan tests => 2;
+diag("Returned: " . sprintf('%d', $rc));
+
+$rc = pass('test to pass');
+diag("Returned: $rc");
+
+$rc = pass('test to pass with extra string');
+diag("Returned: $rc");

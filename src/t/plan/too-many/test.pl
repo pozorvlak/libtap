@@ -5,7 +5,13 @@ use strict;
 
 use Test::More;
 
-plan tests => 5;
+my $rc = 0;
 
-ok(1);
-ok(0);
+$rc = plan tests => 5;
+diag("Returned: " . sprintf("%d", $rc));
+
+$rc = ok(1);
+diag("Returned: $rc");
+
+$rc = ok(0);
+diag("Returned: $rc");

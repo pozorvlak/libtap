@@ -29,8 +29,10 @@
 int
 main(int argc, char *argv[])
 {
+	unsigned int rc = 0;
 
-	plan_skip_all("No good reason");
+	rc = plan_skip_all("No good reason");
+	diag("Returned: %d", rc);
 
 	return exit_status();
 }
