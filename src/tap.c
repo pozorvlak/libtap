@@ -42,7 +42,7 @@ static char *todo_msg = NULL;
 static char *todo_msg_fixed = "libtap malloc issue";
 static int todo = 0;
 static int test_died = 0;
-pthread_mutex_t M = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t M = PTHREAD_MUTEX_INITIALIZER;
 
 /* Partly to save typing, partly because I expect the global variables
    might move in to a global struct at some point */
