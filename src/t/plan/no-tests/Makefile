@@ -1,7 +1,7 @@
 PROG= 		test
-CFLAGS+=	-g -I../..
+CFLAGS+=	-g -I../../..
 LDADD= 		-ltap
-LDFLAGS=	-L../..
+LDFLAGS=	-L../../..
 NOMAN=		noman
 
 CLEANFILES+=	test.o test.c.out test.pl.out
