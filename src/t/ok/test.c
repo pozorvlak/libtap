@@ -34,9 +34,9 @@ main(int argc, char *argv[])
 
 	plan_tests(4);
 	ok(1 == 1, "1 equals 1");
-	ok2(1 == 1);
+	ok1(1 == 1);
 	ok(1 == 2, "1 equals 2");
-	ok2(1 == 2);
+	ok1(1 == 2);
 
 	return exit_status();
 }

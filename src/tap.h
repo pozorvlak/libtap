@@ -31,7 +31,7 @@
 			  _gen_result(0, __func__, __FILE__, __LINE__,  \
 				      test, ## __VA_ARGS__))
 
-#define ok2(e) ((e) ? \
+#define ok1(e) ((e) ? \
 		_gen_result(1, __func__, __FILE__, __LINE__, "%s", #e) : \
 		_gen_result(0, __func__, __FILE__, __LINE__, "%s", #e))
 

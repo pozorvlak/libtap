@@ -20,7 +20,7 @@ connection could not be made).
 plan_tests(n) indicates that you are going to run 'n' tests.  Running any
 fewer or any more is treated as a failure.
 
-Then you have one of ok() or ok2() at your disposal.  ok()'s first parameter
+Then you have one of ok() or ok1() at your disposal.  ok()'s first parameter
 is the code to test.  The second parameter is the test name.  This is a 
 printf()like format string, and the third and subsequent parameters should
 fill out any values in the string.
@@ -28,15 +28,15 @@ fill out any values in the string.
     ok(a_func() == 0, "test name");
     ok(some_func(i), "some_func(%d)", i);
 
-ok2() is for situations where the code to test is sufficiently 
+ok1() is for situations where the code to test is sufficiently 
 self-documenting that you don't need to provide a test name.
 
-    ok2(code to test); /* test name is automatically the same as the code */
+    ok1(code to test); /* test name is automatically the same as the code */
 
 E.g.,
 
     ok(1 == 1, "1 equals one"); /* PRINT: ok 1 - 1 equals 1 */
-    ok2(1 == 2);                /* PRINT: not ok 2 - 1 == 2 */
+    ok1(1 == 2);                /* PRINT: not ok 2 - 1 == 2 */
 
 Sets of tests can be skipped.  Ordinarily you would do this because
 the test can't be run in this particular testing environment.
