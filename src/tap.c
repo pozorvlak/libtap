@@ -33,7 +33,7 @@
 static int no_plan = 0;
 static int skip_all = 0;
 static int have_plan = 0;
-static int test_count = 0;	/* Current number of tests that have been run */
+static int test_count = 0;	/* Number of tests that have been run */
 static int e_tests = 0;		/* Expected number of tests to run */
 static unsigned int failures = 0; /* Number of tests that failed */
 
@@ -49,7 +49,8 @@ static void _cleanup(void);
  * test_comment -- a comment to print afterwards, may be NULL
  */
 void
-_gen_result(int ok, const char *func, char *file, unsigned int line, char *test_name, ...)
+_gen_result(int ok, const char *func, char *file, unsigned int line, 
+	    char *test_name, ...)
 {
 	va_list ap;
 
@@ -74,7 +75,8 @@ _gen_result(int ok, const char *func, char *file, unsigned int line, char *test_
 	printf("\n");
 
 	if(!ok)
-		diag("    Failed test (%s:%s() at line %d)", file, func, line);
+		diag("    Failed test (%s:%s() at line %d)", 
+		     file, func, line);
 }
 
 void
