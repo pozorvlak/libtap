@@ -57,6 +57,8 @@ _gen_result(int ok, const char *func, char *file, unsigned int line,
 	    char *test_name, ...)
 {
 	va_list ap;
+	char *local_test_name = NULL;
+	char *c;
 
 	test_count++;
 
@@ -69,9 +71,39 @@ _gen_result(int ok, const char *func, char *file, unsigned int line,
 
 	if(test_name != NULL) {
 		printf(" - ");
+
+		/* If the test name contains no '#' characters then
+		   it's safe to print directly.  If it does then they
+		   must be escaped. */
+
+		/* Start by taking the test name and performing any
+		   printf() expansions on it */
 		va_start(ap, test_name);
-		vprintf(test_name, ap);
+		vasprintf(&local_test_name, test_name, ap);
 		va_end(ap);
+
+		/* Assuming vasprint() succeeded check for '#'
+                   characters.  Use printf() if there are none,
+                   Otherwise, print each character in the testname
+                   directly, escaping '#' characters as necessary. */
+		if(local_test_name) {
+			if(strchr(local_test_name, '#') == NULL) {
+				printf("%s", local_test_name);
+			} else {
+				flockfile(stdout);
+				c = local_test_name;
+				while(*c != '\0') {
+					if(*c == '#')
+						fputc('\\', stdout);
+					fputc((int)*c, stdout);
+					c++;
+				}
+				funlockfile(stdout);
+			}
+			free(local_test_name);
+		} else {	/* vasprintf() failed, use a fixed message */
+			printf("%s", todo_msg_fixed);
+		}
 	}
 
 	/* If we're in a todo_start() block then flag the test as being

@@ -1,9 +1,4 @@
-PROG= 		test
-CFLAGS+=	-g -I../..
-LDADD= 		-ltap
-LDFLAGS=	-L../..
-NOMAN=		noman
+SUBDIR=		ok
+SUBDIR+=	ok-hash
 
-CLEANFILES+=	test.o test.c.out test.pl.out
-
-.include <bsd.prog.mk>
+.include <bsd.subdir.mk>

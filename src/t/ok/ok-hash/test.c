@@ -36,17 +36,17 @@ main(int argc, char *argv[])
 	rc = plan_tests(4);
 	diag("Returned: %d", rc);
 
-	rc = ok(1 == 1, "1 equals 1");
+	rc = ok(1, "Test with no hash");
 	diag("Returned: %d", rc);
 
-	rc = ok1(1 == 1);
+	rc = ok(1, "Test with one # hash");
 	diag("Returned: %d", rc);
 
-	rc = ok(1 == 2, "1 equals 2");
+        rc = ok(1, "Test with # two # hashes");
 	diag("Returned: %d", rc);
 
-	rc = ok1(1 == 2);
+	rc = ok(1, "Test with ## back to back hashes");
 	diag("Returned: %d", rc);
-
+	
 	return exit_status();
 }
