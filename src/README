@@ -1,0 +1,22 @@
+Very early start.
+
+Usage:
+
+    #include "tap.h", and link against libtap.so
+
+Start by calling one of the plan_* functions:
+
+    plan_no_plan()   /* you have no test plan, or */
+    plan_skip_all()  /* all tests will be skipped, or */
+    plan_tests(42);  /* you will run 42 tests */
+
+Then you have one of ok() or ok2() at your disposal.
+
+    ok(code to test, 'test name');
+
+    ok2(code to test); /* test name is automatically the same as the code */
+
+E.g.,
+
+    ok(1 == 1, '1 equals one'); /* PRINT: ok 1 - 1 equals 1 */
+    ok2(1 == 2);                /* PRINT: ok 2 - 1 == 1 */
