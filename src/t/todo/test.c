@@ -24,40 +24,38 @@
  * SUCH DAMAGE.
  */
 
-/* ## __VA_ARGS__ is a gcc'ism */   
-#define ok(e, test, ...) ((e) ?						\
-			  _gen_result(1, __func__, __FILE__, __LINE__,  \
-				      test, ## __VA_ARGS__) :		\
-			  _gen_result(0, __func__, __FILE__, __LINE__,  \
-				      test, ## __VA_ARGS__))
+#include <stdio.h>
 
-#define ok1(e) ((e) ? \
-		_gen_result(1, __func__, __FILE__, __LINE__, "%s", #e) : \
-		_gen_result(0, __func__, __FILE__, __LINE__, "%s", #e))
+#include "tap.h"
 
-#define pass(test, ...) ok(1, test, ## __VA_ARGS__);
-#define fail(test, ...) ok(0, test, ## __VA_ARGS__);
+int
+main(int argc, char *argv[])
+{
+	unsigned int rc = 0;
+	unsigned int side_effect = 0;
 
-#define skip_start(test, n, fmt, ...)			\
-	do {						\
-		if((test)) {				\
-			skip(n, fmt, ## __VA_ARGS__);	\
-			continue;			\
-		}
+	rc = plan_tests(4);
+	diag("Returned: %d", rc);
 
-#define skip_end } while(0);
+	rc = ok(1 == 1, "1 equals 1");	/* Should always work */
+	diag("Returned: %d", rc);
 
-unsigned int _gen_result(int, const char *, char *, unsigned int, char *, ...);
+	todo_start("For testing purposes");
 
-int plan_no_plan(void);
-int plan_skip_all(char *);
-int plan_tests(unsigned int);
+	side_effect++;
 
-unsigned int diag(char *, ...);
+	/* This test should fail */
+	rc = ok(side_effect == 0, "side_effect checked out");
+	diag("Returned: %d", rc);
 
-int skip(unsigned int, char *, ...);
+	/* This test should unexpectedly succeed */
+	rc = ok(side_effect == 1, "side_effect checked out");
+	diag("Returned: %d", rc);
 
-void todo_start(char *, ...);
-void todo_end(void);
+	todo_end();
 
-int exit_status(void);
+	rc = ok(side_effect == 1, "side_effect is %d", side_effect);
+	diag("Returned: %d", rc);
+
+	return exit_status();
+}

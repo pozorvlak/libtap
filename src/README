@@ -88,6 +88,38 @@ above example could be re-written:
 
     skip_end;	/* It's a macro, no parentheses... */
 
+Sets of tests can be flagged as being 'TODO'.  These are tests that you
+expect to fail, probably because you haven't fixed a bug, or finished
+a new feature yet.  These tests will still be run, but with additional
+output that indicates that they are expected to fail.  Should a test start
+to succeed unexpectedly, tools like prove(1) will indicate this, and you
+can move the test out of the todo block.  This is much more useful than
+simply commenting (or "#ifdef 0 ... #endif") the tests.
+
+    todo_start("dwim() not implemented yet");
+
+    ok(dwim(), "Did what the user wanted");
+
+    todo_end();
+
+Should dwim() ever start succeeding you'll know about it as soon as you
+run the tests.  Note that *unlike* skip_*, additional code between 
+todo_start() and todo_end() *is* executed.
+
+From the Test::More documentation:
+
+   When do I use SKIP vs. TODO?
+       If it's something the user might not be able to do, use SKIP.  This
+       includes optional modules that aren't installed, running under
+       an OS that doesn't have some feature (like fork() or symlinks),
+       or maybe you need an Internet connection and one isn't
+       available.
+
+       If it's something the programmer hasn't done yet, use TODO.
+       This is for any code you haven't written yet, or bugs you have
+       yet to fix, but want to put tests in your testing script
+       (always a good idea).
+
 You also have diag(), which takes a printf() style format string and related
 arguments, and sends the output to stderr as a test comment.  diag() adds
 the necessary trailing "\n" for you.

@@ -36,6 +36,9 @@ static int have_plan = 0;
 static unsigned int test_count = 0; /* Number of tests that have been run */
 static unsigned int e_tests = 0; /* Expected number of tests to run */
 static unsigned int failures = 0; /* Number of tests that failed */
+static char *todo_msg = NULL;
+static char *todo_msg_fixed = "libtap malloc issue";
+static int todo = 0;
 
 static void _expected_tests(unsigned int);
 static void _tap_init(void);
@@ -70,11 +73,23 @@ _gen_result(int ok, const char *func, char *file, unsigned int line,
 		va_end(ap);
 	}
 
+	/* If we're in a todo_start() block then flag the test as being
+	   TODO.  todo_msg should contain the message to print at this
+	   point.  If it's NULL then asprintf() failed, and we should
+	   use the fixed message.
+
+	   This is not counted as a failure either. */
+	if(todo) {
+		printf(" # TODO %s", todo_msg ? todo_msg : todo_msg_fixed);
+		if(!ok)
+			failures--;
+	}
+
 	printf("\n");
 
 	if(!ok)
-		diag("    Failed test (%s:%s() at line %d)", 
-		     file, func, line);
+		diag("    Failed %stest (%s:%s() at line %d)", 
+		     todo ? "(TODO) " : "", file, func, line);
 
 	/* We only care (when testing) that ok is positive, but here we
 	   specifically only want to return 1 or 0 */
@@ -209,6 +224,26 @@ skip(unsigned int n, char *fmt, ...)
 	free(skip_msg);
 
 	return 1;
+}
+
+void
+todo_start(char *fmt, ...)
+{
+	va_list ap;
+
+	va_start(ap, fmt);
+	asprintf(&todo_msg, fmt, ap);
+	va_end(ap);
+
+	todo = 1;
+}
+
+void
+todo_end(void)
+{
+
+	todo = 0;
+	free(todo_msg);
 }
 
 int
