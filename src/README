@@ -88,3 +88,12 @@ of:
     exit(exit_status());
 
 As appropriate.  
+
+SIDE EFFECTS
+
+Ideally running the tests should have no side effects on the behaviour
+of the application you're testing.  However, it's not always possible to
+avoid them.
+
+ * stdout is set to unbuffered mode after calling any of the plan_*()
+   functions.

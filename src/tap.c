@@ -56,8 +56,6 @@ _gen_result(int ok, const char *func, char *file, unsigned int line,
 
 	test_count++;
 
-	_tap_init();
-
 	if(!ok) {
 		printf("not ");
 		failures++;
@@ -101,6 +99,11 @@ _tap_init(void)
 
 	if(!run_once) {
 		atexit(_cleanup);
+
+		/* stdout needs to be unbuffered so that the output appears
+		   in the same place relative to stderr output as it does 
+		   with Test::Harness */
+		setbuf(stdout, 0);
 		run_once = 1;
 	}
 }
@@ -111,6 +114,8 @@ _tap_init(void)
 int
 plan_no_plan(void)
 {
+
+	_tap_init();
 
 	if(have_plan != 0) {
 		return -1;
@@ -129,6 +134,8 @@ int
 plan_skip_all(char *reason)
 {
 
+	_tap_init();
+
 	skip_all = 1;
 
 	printf("1..0");
@@ -139,7 +146,6 @@ plan_skip_all(char *reason)
 	printf("\n");
 
 	exit(0);
-	return 0;
 }
 
 /*
@@ -149,17 +155,18 @@ int
 plan_tests(unsigned int tests)
 {
 
+	_tap_init();
+
 	if(have_plan != 0) {
 		return -1;
 	}
 
-	have_plan = 1;
-
 	if(tests == 0) {
 		fprintf(stderr, "You said to run 0 tests!  You've got to run something.\n");
-		fprintf(stderr, "(did you mean 'plan_skip_all();' ? )\n");
 		exit(255);
 	}
+
+	have_plan = 1;
 		
 	_expected_tests(tests);
 }
@@ -208,7 +215,19 @@ skip(unsigned int n, char *fmt, ...)
 int
 exit_status(void)
 {
-	return failures;
+
+	/* If there's no plan, just return the number of failures */
+	if(no_plan || !have_plan)
+		return failures;
+
+	/* Ran too many tests?  Return the number of tests that were run
+	   that shouldn't have been */
+	if(e_tests < test_count)
+		return test_count - e_tests;
+
+	/* Return the number of tests that failed + the number of tests 
+	   that weren't run */
+	return failures + e_tests - test_count;
 }
 
 /*
@@ -219,10 +238,31 @@ void
 _cleanup(void)
 {
 
+	/* If plan_no_plan() wasn't called, and we don't have a plan,
+	   and we're not skipping everything, then something happened
+	   before we could produce any output */
+	if(!no_plan && !have_plan && !skip_all) {
+		diag("Looks like your test died before it could output anything.");
+		return;
+	}
+
+
 	/* No plan provided, but now we know how many tests were run, and can
 	   print the header at the end */
 	if(!skip_all && (no_plan || !have_plan)) {
 		printf("1..%d\n", test_count);
+	}
+
+	if((have_plan && !no_plan) && e_tests < test_count) {
+		diag("Looks like you planned %d tests but ran %d extra.",
+		     e_tests, test_count - e_tests);
+		return;
+	}
+
+	if((have_plan || !no_plan) && e_tests > test_count) {
+		diag("Looks like you planned %d tests but only ran %d.",
+		     e_tests, test_count);
+		return;
 	}
 
 	if(failures)
