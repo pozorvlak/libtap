@@ -48,9 +48,9 @@ static void _cleanup(void);
  * test_comment -- a comment to print afterwards, may be NULL
  */
 void
-_gen_result(int ok, char *test_name, char *test_comment, 
-	    const char *func, char *file, unsigned int line)
+_gen_result(int ok, const char *func, char *file, unsigned int line, char *test_name, ...)
 {
+	va_list ap;
 
 	test_count++;
 
@@ -61,11 +61,12 @@ _gen_result(int ok, char *test_name, char *test_comment,
 
 	printf("ok %d", test_count);
 
-	if(test_name != NULL)
-		printf(" - %s", test_name);
-
-	if(test_comment != NULL)
-		printf(" # %s", test_comment);
+	if(test_name != NULL) {
+		printf(" - ");
+		va_start(ap, test_name);
+		vprintf(test_name, ap);
+		va_end(ap);
+	}
 
 	printf("\n");
 

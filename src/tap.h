@@ -24,19 +24,18 @@
  * SUCH DAMAGE.
  */
 
-/* C99: __func__ */
-   
-#define ok(e, test) ((e) ? \
-		     _gen_result(1, test, NULL, __func__, __FILE__, __LINE__) : \
-		     _gen_result(0, test, NULL, __func__, __FILE__, __LINE__))
+/* ## __VA_ARGS__ is a gcc'ism */   
+#define ok(e, test, ...) ((e) ?						\
+		     _gen_result(1, __func__, __FILE__, __LINE__, test, ## __VA_ARGS__) : \
+		     _gen_result(0, __func__, __FILE__, __LINE__, test, ## __VA_ARGS__))
 
 #define ok2(e) ((e) ? \
-		_gen_result(1, #e, NULL, __func__, __FILE__, __LINE__) : \
-		_gen_result(0, #e, NULL, __func__, __FILE__, __LINE__))
+		_gen_result(1, __func__, __FILE__, __LINE__, "%s", #e) : \
+		_gen_result(0, __func__, __FILE__, __LINE__, "%s", #e))
 
 void _reset(void);		/* Exposed for testing */
 
-void _gen_result(int, char *, char *, const char *, char *, unsigned int);
+void _gen_result(int, const char *, char *, unsigned int, char *, ...);
 
 int plan_no_plan(void);
 int plan_skip_all(char *);
