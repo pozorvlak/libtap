@@ -24,6 +24,7 @@
  * SUCH DAMAGE.
  */
 
+#include <ctype.h>
 #include <pthread.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -66,10 +67,37 @@ _gen_result(int ok, const char *func, char *file, unsigned int line,
 	va_list ap;
 	char *local_test_name = NULL;
 	char *c;
+	int name_is_digits;
 
 	LOCK;
 
 	test_count++;
+
+	/* Start by taking the test name and performing any printf()
+	   expansions on it */
+	if(test_name != NULL) {
+		va_start(ap, test_name);
+		vasprintf(&local_test_name, test_name, ap);
+		va_end(ap);
+
+		/* Make sure the test name contains more than digits
+		   and spaces.  Emit an error message and exit if it
+		   does */
+		if(local_test_name) {
+			name_is_digits = 1;
+			for(c = local_test_name; *c != '\0'; c++) {
+				if(!isdigit(*c) && !isspace(*c)) {
+					name_is_digits = 0;
+					break;
+				}
+			}
+
+			if(name_is_digits) {
+				diag("    You named your test '%s'.  You shouldn't use numbers for your test names.", local_test_name);
+				diag("    Very confusing.");
+			}
+		}
+	}
 
 	if(!ok) {
 		printf("not ");
@@ -81,35 +109,16 @@ _gen_result(int ok, const char *func, char *file, unsigned int line,
 	if(test_name != NULL) {
 		printf(" - ");
 
-		/* If the test name contains no '#' characters then
-		   it's safe to print directly.  If it does then they
-		   must be escaped. */
-
-		/* Start by taking the test name and performing any
-		   printf() expansions on it */
-		va_start(ap, test_name);
-		vasprintf(&local_test_name, test_name, ap);
-		va_end(ap);
-
-		/* Assuming vasprint() succeeded check for '#'
-                   characters.  Use printf() if there are none,
-                   Otherwise, print each character in the testname
-                   directly, escaping '#' characters as necessary. */
-		if(local_test_name) {
-			if(strchr(local_test_name, '#') == NULL) {
-				printf("%s", local_test_name);
-			} else {
-				flockfile(stdout);
-				c = local_test_name;
-				while(*c != '\0') {
-					if(*c == '#')
-						fputc('\\', stdout);
-					fputc((int)*c, stdout);
-					c++;
-				}
-				funlockfile(stdout);
+		/* Print the test name, escaping any '#' characters it
+		   might contain */
+		if(local_test_name != NULL) {
+			flockfile(stdout);
+			for(c = local_test_name; *c != '\0'; c++) {
+				if(*c == '#')
+					fputc('\\', stdout);
+				fputc((int)*c, stdout);
 			}
-			free(local_test_name);
+			funlockfile(stdout);
 		} else {	/* vasprintf() failed, use a fixed message */
 			printf("%s", todo_msg_fixed);
 		}
@@ -120,7 +129,8 @@ _gen_result(int ok, const char *func, char *file, unsigned int line,
 	   point.  If it's NULL then asprintf() failed, and we should
 	   use the fixed message.
 
-	   This is not counted as a failure either. */
+	   This is not counted as a failure, so decrement the counter if
+	   the test failed. */
 	if(todo) {
 		printf(" # TODO %s", todo_msg ? todo_msg : todo_msg_fixed);
 		if(!ok)
@@ -132,6 +142,8 @@ _gen_result(int ok, const char *func, char *file, unsigned int line,
 	if(!ok)
 		diag("    Failed %stest (%s:%s() at line %d)", 
 		     todo ? "(TODO) " : "", file, func, line);
+
+	free(local_test_name);
 
 	UNLOCK;
 
