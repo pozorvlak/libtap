@@ -38,5 +38,5 @@ main(int argc, char *argv[])
 	ok(1 == 2, "1 equals 2");
 	ok2(1 == 2);
 
-	return 0;
+	return exit_status();
 }
