@@ -79,14 +79,14 @@ are no additional side effects from the skipped tests.
         ok(do_something_as_root() == 0, "do_something_as_root() worked");
     } while(0);
 
-Two macros, SKIP_START and SKIP_END can handle some of this for you.  The
+Two macros, skip_start and skip_end can handle some of this for you.  The
 above example could be re-written:
 
-    SKIP_START(getuid() != 0, 1, "Test only makes sense as root");
+    skip_start(getuid() != 0, 1, "Test only makes sense as root");
 
     ok(do_something_as_root() == 0, "do_something_as_root() worked");
 
-    SKIP_END;
+    skip_end;	/* It's a macro, no parentheses... */
 
 You also have diag(), which takes a printf() style format string and related
 arguments, and sends the output to stderr as a test comment.  diag() adds

@@ -38,14 +38,14 @@
 #define pass(test, ...) ok(1, test, ## __VA_ARGS__);
 #define fail(test, ...) ok(0, test, ## __VA_ARGS__);
 
-#define SKIP_START(test, n, fmt, ...)			\
+#define skip_start(test, n, fmt, ...)			\
 	do {						\
 		if((test)) {				\
 			skip(n, fmt, ## __VA_ARGS__);	\
 			continue;			\
 		}
 
-#define SKIP_END } while(0);
+#define skip_end } while(0);
 
 unsigned int _gen_result(int, const char *, char *, unsigned int, char *, ...);
 

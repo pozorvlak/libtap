@@ -54,13 +54,13 @@ main(int argc, char *argv[])
 
 	diag("Returned: %d", rc);
 
-	SKIP_START(1 == 1, 1, "Testing skipping #2");
+	skip_start(1 == 1, 1, "Testing skipping #2");
 
 	side_effect++;
 	rc = ok(side_effect == 1, "side_effect checked out");
 	diag("Returned: %d", rc);
 
-	SKIP_END;
+	skip_end;
 
 	rc = ok(side_effect == 0, "side_effect is %d", side_effect);
 	diag("Returned: %d", rc);
