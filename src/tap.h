@@ -24,28 +24,54 @@
  * SUCH DAMAGE.
  */
 
-/* ## __VA_ARGS__ is a gcc'ism */   
-#define ok(e, test, ...) ((e) ?						\
-			  _gen_result(1, __func__, __FILE__, __LINE__,  \
-				      test, ## __VA_ARGS__) :		\
-			  _gen_result(0, __func__, __FILE__, __LINE__,  \
-				      test, ## __VA_ARGS__))
+/* '## __VA_ARGS__' is a gcc'ism. C99 doesn't allow the token pasting
+   and requires the caller to add the final comma if they've ommitted
+   the optional arguments */
+#ifdef __GNUC__
+# define ok(e, test, ...) ((e) ?					\
+			   _gen_result(1, __func__, __FILE__, __LINE__,	\
+				       test, ## __VA_ARGS__) :		\
+			   _gen_result(0, __func__, __FILE__, __LINE__,	\
+				       test, ## __VA_ARGS__))
 
-#define ok1(e) ((e) ? \
-		_gen_result(1, __func__, __FILE__, __LINE__, "%s", #e) : \
-		_gen_result(0, __func__, __FILE__, __LINE__, "%s", #e))
+# define ok1(e) ((e) ?							\
+		 _gen_result(1, __func__, __FILE__, __LINE__, "%s", #e) : \
+		 _gen_result(0, __func__, __FILE__, __LINE__, "%s", #e))
 
-#define pass(test, ...) ok(1, test, ## __VA_ARGS__);
-#define fail(test, ...) ok(0, test, ## __VA_ARGS__);
+# define pass(test, ...) ok(1, test, ## __VA_ARGS__);
+# define fail(test, ...) ok(0, test, ## __VA_ARGS__);
 
-#define skip_start(test, n, fmt, ...)			\
+# define skip_start(test, n, fmt, ...)			\
 	do {						\
 		if((test)) {				\
 			skip(n, fmt, ## __VA_ARGS__);	\
 			continue;			\
 		}
+#elif __STDC_VERSION__ >= 199901L /* __GNUC__ */
+# define ok(e, ...) ((e) ?						\
+		     _gen_result(1, __func__, __FILE__, __LINE__,	\
+				 __VA_ARGS__) :				\
+		     _gen_result(0, __func__, __FILE__, __LINE__,	\
+				 __VA_ARGS__))
 
-#define skip_end } while(0);
+# define ok1(e) ((e) ?							\
+		 _gen_result(1, __func__, __FILE__, __LINE__, "%s", #e) : \
+		 _gen_result(0, __func__, __FILE__, __LINE__, "%s", #e))
+
+# define pass(...) ok(1, __VA_ARGS__);
+# define fail(...) ok(0, __VA_ARGS__);
+
+# define skip_start(test, n, ...)			\
+	do {						\
+		if((test)) {				\
+			skip(n,  __VA_ARGS__);		\
+			continue;			\
+		}
+#else /* __STDC_VERSION__ */
+# error "Needs gcc or C99 compiler for variadic macros."
+#endif /* __STDC_VERSION__ */
+
+# define skip_end } while(0);
 
 unsigned int _gen_result(int, const char *, char *, unsigned int, char *, ...);
 

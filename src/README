@@ -151,3 +151,15 @@ cases) very welcome.
 
 Each function acquires a mutex lock before manipulating any global 
 variables, and releases it at the appropriate point.
+
+COMPILER NOTES
+
+libtap requires a C99 compliant compiler.  Some of the functions are 
+implemented as macros (to obtain the function, file, and line number
+information) and take a variable number of arguments.  As far as I am
+aware this was only codified in the C99 standard.
+
+The variable number of arguments are to support many of the functions
+taking printf'like argument sets.  It would be possible to implement a
+sibling set of macros (ok_nofmt() ?) that don't require this, but I'm
+waiting for feedback to see whether or not this is worthwhile.
