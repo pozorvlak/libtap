@@ -6,11 +6,19 @@ AC_PROG_LIBTOOL
 AC_PROG_INSTALL
 
 # Checks for libraries
-AC_CHECK_LIB([pthread], [pthread_mutex_lock])
+case "$host" in
+	*-*-*freebsd4*)
+		LDFLAGS="$LDFLAGS -pthread"
+		;;
+	*)
+		AC_CHECK_LIB(pthread, main)
+		;;
+esac
 
 # Checks for header files
 AC_HEADER_STDC
 AC_CHECK_HEADERS([stdlib.h])
+AC_CHECK_HEADERS([pthread.h])
 
 # Checks for  typedefs, structures, and compiler characteristics.
 AC_C_CONST
