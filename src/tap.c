@@ -39,6 +39,7 @@ static unsigned int failures = 0; /* Number of tests that failed */
 static char *todo_msg = NULL;
 static char *todo_msg_fixed = "libtap malloc issue";
 static int todo = 0;
+static int test_died = 0;
 
 static void _expected_tests(unsigned int);
 static void _tap_init(void);
@@ -126,7 +127,9 @@ plan_no_plan(void)
 	_tap_init();
 
 	if(have_plan != 0) {
-		return -1;
+		fprintf(stderr, "You tried to plan twice!\n");
+		test_died = 1;
+		exit(255);
 	}
 
 	have_plan = 1;
@@ -166,11 +169,14 @@ plan_tests(unsigned int tests)
 	_tap_init();
 
 	if(have_plan != 0) {
-		return -1;
+		fprintf(stderr, "You tried to plan twice!\n");
+		test_died = 1;
+		exit(255);
 	}
 
 	if(tests == 0) {
 		fprintf(stderr, "You said to run 0 tests!  You've got to run something.\n");
+		test_died = 1;
 		exit(255);
 	}
 
@@ -277,6 +283,11 @@ _cleanup(void)
 	   before we could produce any output */
 	if(!no_plan && !have_plan && !skip_all) {
 		diag("Looks like your test died before it could output anything.");
+		return;
+	}
+
+	if(test_died) {
+		diag("Looks like your test died just after %d.", test_count);
 		return;
 	}
 
