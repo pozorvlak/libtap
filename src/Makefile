@@ -8,4 +8,7 @@ CFLAGS+=	-g
 
 SUBDIR+=	t
 
+test:
+	prove -r -v
+
 .include <bsd.lib.mk>
