@@ -24,6 +24,7 @@
  * SUCH DAMAGE.
  */
 
+#include <pthread.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -40,6 +41,12 @@ static char *todo_msg = NULL;
 static char *todo_msg_fixed = "libtap malloc issue";
 static int todo = 0;
 static int test_died = 0;
+pthread_mutex_t M = PTHREAD_MUTEX_INITIALIZER;
+
+/* Partly to save typing, partly because I expect the global variables
+   might move in to a global struct at some point */
+#define LOCK pthread_mutex_lock(&M);
+#define UNLOCK pthread_mutex_unlock(&M);
 
 static void _expected_tests(unsigned int);
 static void _tap_init(void);
@@ -59,6 +66,8 @@ _gen_result(int ok, const char *func, char *file, unsigned int line,
 	va_list ap;
 	char *local_test_name = NULL;
 	char *c;
+
+	LOCK;
 
 	test_count++;
 
@@ -124,6 +133,8 @@ _gen_result(int ok, const char *func, char *file, unsigned int line,
 		diag("    Failed %stest (%s:%s() at line %d)", 
 		     todo ? "(TODO) " : "", file, func, line);
 
+	UNLOCK;
+
 	/* We only care (when testing) that ok is positive, but here we
 	   specifically only want to return 1 or 0 */
 	return ok ? 1 : 0;
@@ -138,6 +149,8 @@ _tap_init(void)
 {
 	static int run_once = 0;
 
+	LOCK;
+
 	if(!run_once) {
 		atexit(_cleanup);
 
@@ -147,6 +160,8 @@ _tap_init(void)
 		setbuf(stdout, 0);
 		run_once = 1;
 	}
+
+	UNLOCK;
 }
 
 /*
@@ -156,16 +171,21 @@ int
 plan_no_plan(void)
 {
 
+	LOCK;
+
 	_tap_init();
 
 	if(have_plan != 0) {
 		fprintf(stderr, "You tried to plan twice!\n");
 		test_died = 1;
+		UNLOCK;
 		exit(255);
 	}
 
 	have_plan = 1;
 	no_plan = 1;
+
+	UNLOCK;
 
 	return 0;
 }
@@ -176,6 +196,8 @@ plan_no_plan(void)
 int
 plan_skip_all(char *reason)
 {
+
+	LOCK;
 
 	_tap_init();
 
@@ -188,6 +210,8 @@ plan_skip_all(char *reason)
 
 	printf("\n");
 
+	UNLOCK;
+
 	exit(0);
 }
 
@@ -198,23 +222,29 @@ int
 plan_tests(unsigned int tests)
 {
 
+	LOCK;
+
 	_tap_init();
 
 	if(have_plan != 0) {
 		fprintf(stderr, "You tried to plan twice!\n");
 		test_died = 1;
+		UNLOCK;
 		exit(255);
 	}
 
 	if(tests == 0) {
 		fprintf(stderr, "You said to run 0 tests!  You've got to run something.\n");
 		test_died = 1;
+		UNLOCK;
 		exit(255);
 	}
 
 	have_plan = 1;
 
 	_expected_tests(tests);
+
+	UNLOCK;
 
 	return 0;
 }
@@ -224,6 +254,8 @@ diag(char *fmt, ...)
 {
 	va_list ap;
 
+	LOCK;
+
 	fputs("# ", stderr);
 
 	va_start(ap, fmt);
@@ -232,14 +264,21 @@ diag(char *fmt, ...)
 
 	fputs("\n", stderr);
 
+	UNLOCK;
+
 	return 0;
 }
 
 void
 _expected_tests(unsigned int tests)
 {
+
+	LOCK;
+
 	printf("1..%d\n", tests);
 	e_tests = tests;
+
+	UNLOCK;
 }
 
 int
@@ -247,7 +286,9 @@ skip(unsigned int n, char *fmt, ...)
 {
 	va_list ap;
 	char *skip_msg;
-	
+
+	LOCK;
+
 	va_start(ap, fmt);
 	asprintf(&skip_msg, fmt, ap);
 	va_end(ap);
@@ -261,6 +302,8 @@ skip(unsigned int n, char *fmt, ...)
 
 	free(skip_msg);
 
+	UNLOCK;
+
 	return 1;
 }
 
@@ -269,37 +312,56 @@ todo_start(char *fmt, ...)
 {
 	va_list ap;
 
+	LOCK;
+
 	va_start(ap, fmt);
 	vasprintf(&todo_msg, fmt, ap);
 	va_end(ap);
 
 	todo = 1;
+
+	UNLOCK;
 }
 
 void
 todo_end(void)
 {
 
+	LOCK;
+
 	todo = 0;
 	free(todo_msg);
+
+	UNLOCK;
 }
 
 int
 exit_status(void)
 {
+	int r;
+
+	LOCK;
 
 	/* If there's no plan, just return the number of failures */
-	if(no_plan || !have_plan)
+	if(no_plan || !have_plan) {
+		UNLOCK;
 		return failures;
+	}
 
 	/* Ran too many tests?  Return the number of tests that were run
 	   that shouldn't have been */
-	if(e_tests < test_count)
-		return test_count - e_tests;
+	if(e_tests < test_count) {
+		r = test_count - e_tests;
+		UNLOCK;
+		return r;
+	}
 
 	/* Return the number of tests that failed + the number of tests 
 	   that weren't run */
-	return failures + e_tests - test_count;
+	r = failures + e_tests - test_count;
+	UNLOCK;
+
+	return r;
 }
 
 /*
@@ -310,16 +372,20 @@ void
 _cleanup(void)
 {
 
+	LOCK;
+
 	/* If plan_no_plan() wasn't called, and we don't have a plan,
 	   and we're not skipping everything, then something happened
 	   before we could produce any output */
 	if(!no_plan && !have_plan && !skip_all) {
 		diag("Looks like your test died before it could output anything.");
+		UNLOCK;
 		return;
 	}
 
 	if(test_died) {
 		diag("Looks like your test died just after %d.", test_count);
+		UNLOCK;
 		return;
 	}
 
@@ -333,16 +399,20 @@ _cleanup(void)
 	if((have_plan && !no_plan) && e_tests < test_count) {
 		diag("Looks like you planned %d tests but ran %d extra.",
 		     e_tests, test_count - e_tests);
+		UNLOCK;
 		return;
 	}
 
 	if((have_plan || !no_plan) && e_tests > test_count) {
 		diag("Looks like you planned %d tests but only ran %d.",
 		     e_tests, test_count);
+		UNLOCK;
 		return;
 	}
 
 	if(failures)
 		diag("Looks like you failed %d tests of %d.", 
 		     failures, test_count);
+
+	UNLOCK;
 }

@@ -143,3 +143,11 @@ avoid them.
 
  * stdout is set to unbuffered mode after calling any of the plan_*()
    functions.
+
+THREAD SAFETY
+
+libtap *should* be thread safe.  Indications to the contrary (and test
+cases) very welcome.
+
+Each function acquires a mutex lock before manipulating any global 
+variables, and releases it at the appropriate point.
