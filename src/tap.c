@@ -158,6 +158,7 @@ plan_tests(unsigned int tests)
 	if(tests == 0) {
 		fprintf(stderr, "You said to run 0 tests!  You've got to run something.\n");
 		fprintf(stderr, "(did you mean 'plan_skip_all();' ? )\n");
+		exit(255);
 	}
 		
 	_expected_tests(tests);
