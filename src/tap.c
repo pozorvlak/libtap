@@ -35,6 +35,7 @@ static int skip_all = 0;
 static int have_plan = 0;
 static int test_count = 0;	/* Current number of tests that have been run */
 static int e_tests = 0;		/* Expected number of tests to run */
+static unsigned int failures = 0; /* Number of tests that failed */
 
 static void _expected_tests(int);
 static void _tap_init(void);
@@ -56,8 +57,10 @@ _gen_result(int ok, const char *func, char *file, unsigned int line, char *test_
 
 	_tap_init();
 
-	if(!ok)
+	if(!ok) {
 		printf("not ");
+		failures++;
+	}
 
 	printf("ok %d", test_count);
 
@@ -82,6 +85,7 @@ _reset(void)
 	have_plan = 0;
 	test_count = 0;
 	e_tests = 0;
+	failures = 0;
 }
 
 /*
@@ -191,4 +195,8 @@ _cleanup(void)
 	if(!skip_all && (no_plan || !have_plan)) {
 		printf("1..%d\n", test_count);
 	}
+
+	if(failures)
+		diag("Looks like you failed %d tests of %d.", 
+		     failures, test_count);
 }
