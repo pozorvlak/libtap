@@ -166,8 +166,6 @@ _tap_init(void)
 {
 	static int run_once = 0;
 
-	LOCK;
-
 	if(!run_once) {
 		atexit(_cleanup);
 
@@ -177,8 +175,6 @@ _tap_init(void)
 		setbuf(stdout, 0);
 		run_once = 1;
 	}
-
-	UNLOCK;
 }
 
 /*
@@ -271,8 +267,6 @@ diag(char *fmt, ...)
 {
 	va_list ap;
 
-	LOCK;
-
 	fputs("# ", stderr);
 
 	va_start(ap, fmt);
@@ -281,8 +275,6 @@ diag(char *fmt, ...)
 
 	fputs("\n", stderr);
 
-	UNLOCK;
-
 	return 0;
 }
 
@@ -290,12 +282,8 @@ void
 _expected_tests(unsigned int tests)
 {
 
-	LOCK;
-
 	printf("1..%d\n", tests);
 	e_tests = tests;
-
-	UNLOCK;
 }
 
 int
