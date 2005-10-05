@@ -60,7 +60,7 @@ main(int argc, char *argv[])
 	rc = ok(side_effect == 1, "side_effect checked out");
 	diag("Returned: %d", rc);
 
-	skip_end;
+	skip_end();
 
 	rc = ok(side_effect == 0, "side_effect is %d", side_effect);
 	diag("Returned: %d", rc);
