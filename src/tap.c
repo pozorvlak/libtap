@@ -144,10 +144,13 @@ _gen_result(int ok, const char *func, char *file, unsigned int line,
 
 	printf("\n");
 
-	if(!ok)
+	if(!ok) {
+		if(getenv("HARNESS_ACTIVE") != NULL)
+			fputs("\n", stderr);
+
 		diag("    Failed %stest (%s:%s() at line %d)", 
 		     todo ? "(TODO) " : "", file, func, line);
-
+	}
 	free(local_test_name);
 
 	UNLOCK;
@@ -200,7 +203,7 @@ plan_no_plan(void)
 
 	UNLOCK;
 
-	return 0;
+	return 1;
 }
 
 /*
@@ -259,7 +262,7 @@ plan_tests(unsigned int tests)
 
 	UNLOCK;
 
-	return 0;
+	return e_tests;
 }
 
 unsigned int
@@ -402,22 +405,22 @@ _cleanup(void)
 	}
 
 	if((have_plan && !no_plan) && e_tests < test_count) {
-		diag("Looks like you planned %d tests but ran %d extra.",
-		     e_tests, test_count - e_tests);
+		diag("Looks like you planned %d %s but ran %d extra.",
+		     e_tests, e_tests == 1 ? "test" : "tests", test_count - e_tests);
 		UNLOCK;
 		return;
 	}
 
 	if((have_plan || !no_plan) && e_tests > test_count) {
-		diag("Looks like you planned %d tests but only ran %d.",
-		     e_tests, test_count);
+		diag("Looks like you planned %d %s but only ran %d.",
+		     e_tests, e_tests == 1 ? "test" : "tests", test_count);
 		UNLOCK;
 		return;
 	}
 
 	if(failures)
-		diag("Looks like you failed %d tests of %d.", 
-		     failures, test_count);
+		diag("Looks like you failed %d %s of %d.", 
+		     failures, failures == 1 ? "test" : "tests", test_count);
 
 	UNLOCK;
 }
