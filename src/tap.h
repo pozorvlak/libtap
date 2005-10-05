@@ -71,7 +71,8 @@
 # error "Needs gcc or C99 compiler for variadic macros."
 #endif /* __STDC_VERSION__ */
 
-# define skip_end } while(0);
+#define skip_end } while(0);
+#define skip_end() } while(0);
 
 unsigned int _gen_result(int, const char *, char *, unsigned int, char *, ...);
 

@@ -166,7 +166,7 @@ These are synonyms for ok(1, ...) and ok(0, ...).
 .Fn skip_start "expression" "unsigned int" "char *" "..."
 .Xc
 .It Xo
-.Sy skip_end
+.Fn skip_end
 .Xc
 .El
 .Pp
@@ -202,7 +202,7 @@ skip_start(getuid() != 0, 1, "because test only works as root");
 
 ok(do_something_as_root() == 0, "Did something as root");
 
-skip_end;    /* It's a macro, no parentheses */
+skip_end();
 .Ed
 .Ss MARKING TESTS AS Dq TODO
 .Bl -tag -width indent
