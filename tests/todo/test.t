@@ -4,12 +4,15 @@ cd `dirname $0`
 
 echo '1..2'
 
-make 2>&1 > /dev/null
-
-perl ./test.pl 2>&1 | sed -e 's/#     Failed (TODO) test \(.*\)/#     Failed (TODO) test ()/' > test.pl.out
+perl $srcdir/test.pl 2> /dev/null > test.pl.out
 perlstatus=$?
 
-./test 2>&1 | sed -e 's/#     Failed (TODO) test \(.*\)/#     Failed (TODO) test ()/' > test.c.out
+# Test:;More prints diagnostic from TODO tests on stdout
+# http://rt.cpan.org/Ticket/Display.html?id=14982
+sed '/^#/D' test.pl.out > tmp
+mv tmp test.pl.out
+
+./test 2> /dev/null > test.c.out
 cstatus=$?
 
 diff -u test.pl.out test.c.out

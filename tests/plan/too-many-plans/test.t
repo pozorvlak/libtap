@@ -4,12 +4,10 @@ cd `dirname $0`
 
 echo '1..2'
 
-make 2>&1 > /dev/null
-
-perl ./test.pl 2>&1 | sed -e 's/twice!.*$/twice!/' > test.pl.out
+perl $srcdir/test.pl 2> /dev/null > test.pl.out
 perlstatus=$?
 
-./test 2>&1 | sed -e 's/twice!.*$/twice!/' > test.c.out
+./test 2> /dev/null > test.c.out
 cstatus=$?
 
 diff -u test.pl.out test.c.out
