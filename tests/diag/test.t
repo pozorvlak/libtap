@@ -1,15 +1,11 @@
 #!/bin/sh
 
-cd `dirname $0`
+echo '1..7'
 
-echo '1..2'
-
-make 2>&1 > /dev/null
-
-perl ./test.pl 2>&1 | sed -e 's/#     Failed test \(.*\)/#     Failed test ()/' > test.pl.out
+perl $srcdir/test.pl 2>/dev/null >test.pl.out
 perlstatus=$?
 
-./test 2>&1 | sed -e 's/#     Failed test \(.*\)/#     Failed test ()/' > test.c.out
+./test > test.c.out 2>&1
 cstatus=$?
 
 if grep "^# A diagnostic message$" test.c.out > /dev/null ; then
@@ -53,17 +49,17 @@ mv tmp test.c.out
 diff -u test.pl.out test.c.out
 
 if [ $? -eq 0 ]; then
-	echo 'ok 1 - output is identical'
+	echo 'ok 6 - TAP output is identical'
 else
 	retval=1
-	echo 'not ok 1 - output is identical'
+	echo 'not ok 6 - TAP output is identical'
 fi
 
 if [ $perlstatus -eq $cstatus ]; then
-	echo 'ok 2 - status code'
+	echo 'ok 7 - status code'
 else
 	retval=1
-	echo 'not ok 2 - status code'
+	echo 'not ok 7 - status code'
 	echo "# perlstatus = $perlstatus"
 	echo "#    cstatus = $cstatus"
 fi
