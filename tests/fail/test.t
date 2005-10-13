@@ -58,12 +58,14 @@ diff -u test.pl.out test.c.out
 if [ $? -eq 0 ]; then
 	echo 'ok 7 - output is identical'
 else
+	retval=1
 	echo 'not ok 7 - output is identical'
 fi
 
 if [ $perlstatus -eq $cstatus ]; then
 	echo 'ok 8 - status code'
 else
+	retval=1
 	echo 'not ok 8 - status code'
 	echo "# perlstatus = $perlstatus"
 	echo "#    cstatus = $cstatus"

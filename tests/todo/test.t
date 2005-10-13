@@ -1,7 +1,5 @@
 #!/bin/sh
 
-cd `dirname $0`
-
 echo '1..2'
 
 perl $srcdir/test.pl 2> /dev/null > test.pl.out
