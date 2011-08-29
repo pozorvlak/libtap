@@ -1,5 +1,6 @@
 Quick Installation
 
+    sh bootstrap.sh
     ./configure
     make
     make check
