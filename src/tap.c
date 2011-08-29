@@ -222,7 +222,7 @@ plan_skip_all(char *reason)
 	printf("1..0");
 
 	if(reason != NULL)
-		printf(" # Skip %s", reason);
+		printf(" # SKIP %s", reason);
 
 	printf("\n");
 
